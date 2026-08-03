@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{{TITLE}}</title>
+<script>
+window.MathJax = {
+  tex: { inlineMath: [['$', '$'], ['\\(', '\\)']], displayMath: [['$$','$$'], ['\\[','\\]']] },
+  svg: { fontCache: 'global' }
+};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" async></script>
+<style>
+  :root { --fg:#1a1a1a; --muted:#666; --accent:#0b62c4; --box:#f5f7fa; --border:#e2e6eb; }
+  body { max-width: 900px; margin: 0 auto; padding: 40px 24px 120px;
+    font-family: -apple-system, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+    color: var(--fg); line-height: 1.85; font-size: 16px; }
+  h1 { font-size: 27px; border-bottom: 3px solid var(--accent); padding-bottom: 12px; }
+  h1 .sub { display:block; font-size:14px; color:var(--muted); font-weight:normal; margin-top:6px; }
+  h2 { font-size: 22px; margin-top: 46px; color:#fff; background:var(--accent); padding:10px 16px; border-radius:8px; }
+  h3 { font-size:18px; margin-top:30px; color:#2a4a6b; border-left:4px solid #2a4a6b; padding-left:10px; }
+  h4 { font-size:15px; margin-top:20px; color:#555; }
+  .box { background: var(--box); border: 1px solid var(--border); border-radius: 10px; padding: 14px 20px; margin: 16px 0; }
+  .scene { background:#eef6ff; border:1px solid #b9d5f5; border-left:5px solid var(--accent); border-radius:8px; padding:12px 18px; margin:14px 0; }
+  .scene .l { font-weight:700; color:var(--accent); }
+  .result { background:#fff8ec; border:1px solid #f0d9a8; border-left:5px solid #e0a02c; border-radius:8px; padding:14px 20px; margin:20px 0; }
+  .result .label { font-weight:700; color:#b8791a; }
+  .warn { background:#fdeeee; border:1px solid #f2c4c4; border-left:5px solid #c0392b; border-radius:8px; padding:14px 20px; margin:20px 0; }
+  .warn .label { font-weight:700; color:#c0392b; }
+  .ok { background:#f0f7f2; border:1px solid #bfe3cd; border-left:5px solid #1a7f45; border-radius:8px; padding:14px 20px; margin:20px 0; }
+  .ok .label { font-weight:700; color:#1a7f45; }
+  code { background:#eef1f4; padding:1px 6px; border-radius:4px; font-size:90%; }
+  table { border-collapse: collapse; margin: 14px 0; font-size:14.5px; width:100%; }
+  th, td { border: 1px solid var(--border); padding: 7px 11px; text-align:left; vertical-align:top; }
+  th { background: var(--box); }
+  .note { color: var(--muted); font-size:14px; }
+  hr.sep { border:none; border-top:2px dashed var(--border); margin:36px 0; }
+  pre.code {
+    background:#1e2430; color:#e6e6e6; border-radius:10px; padding:16px 18px;
+    overflow-x:auto; font-size:13.3px; line-height:1.6;
+    font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+    margin: 16px 0;
+  }
+  pre.code .cm { color:#7f8a9e; font-style:italic; }
+  pre.code .kw { color:#7cc3f5; }
+  pre.code .st { color:#9ad07a; }
+</style>
+</head>
+<body>
+
+<h1>{{TITLE}}</h1>
+
+{{CONTENT}}
+
+</body>
+</html>
