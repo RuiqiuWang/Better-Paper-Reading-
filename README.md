@@ -1,7 +1,7 @@
 # PaperReading Skills
 
 <p align="center">
-  <em>A Claude Code skill suite that reads an arXiv paper or a GitHub repository and explains it the way a great advisor would — intuition first, then the math, then the code.</em>
+  <em>A Claude Code skill suite that reads an arXiv paper or GitHub repository the way a great advisor would — intuition first, then the math, then the code — and surveys a research area to surface every paper worth reading.</em>
 </p>
 
 <p align="center">
@@ -15,7 +15,7 @@
 
 ## What is this?
 
-**PaperReading Skills** is a set of three Claude Code skills that turn *"read this paper and explain it to me"* into a single command. Point it at an arXiv link or a GitHub repository, and it fetches the paper, reads it in a focused way, and produces a structured, three-layer explanation — from a plain-language intuition of the problem, down to per-equation mathematical derivations and pseudocode of the reference implementation. Every explanation is rendered as a polished, LaTeX-ready HTML note you can keep and re-read.
+**PaperReading Skills** is a set of four Claude Code skills that turn *"read this paper and explain it to me"* and *"find me the papers in this area"* into single commands. Point it at an arXiv link or a GitHub repository, and it fetches the paper, reads it in a focused way, and produces a structured, three-layer explanation — from a plain-language intuition of the problem, down to per-equation mathematical derivations and pseudocode of the reference implementation. Every explanation is rendered as a polished, LaTeX-ready HTML note you can keep and re-read. Point it at a research topic instead, and it runs a multi-source sweep to list every relevant paper with arXiv links, code, and one-line summaries.
 
 It exists because **explaining a paper well is a repeatable craft, not a one-off.** The same ladder of understanding — *intuition → method → details* — applies whether the paper is about stereo vision, diffusion bridges, or rolling checksums. Encoding that ladder as a skill means you never have to re-explain *how* you want a paper explained. You just say `/read <url>`.
 
@@ -45,15 +45,43 @@ Notes don't vanish into the chat. Every read produces a standalone HTML file in 
 - **Rendering** — HTML uses [MathJax](https://www.mathjax.org/) for LaTeX, with a clean light theme and color-coded callouts: <span style="color:#0b62c4">blue = intuition/scene</span>, <span style="color:#666">gray = meaning</span>, <span style="color:#b8791a">orange = conclusion</span>, <span style="color:#c0392b">red = caveat/uncertain</span>, <span style="color:#1a7f45">green = takeaway</green></span>.
 - **Language** — switch the explanation language with `/read-language chinese|english` (default: Chinese). Both the chat summary and the HTML note follow this setting.
 
-## The three commands
+## The four commands
 
 | Command | Purpose |
 |---|---|
 | `/read <arxiv-or-github-url>` | Read a paper and produce a three-layer explanation + HTML note. |
+| `/read-search [conference] <topic>` | Discover papers on a topic — comprehensively — optionally scoped to a top-tier venue. |
 | `/read-store <path>` | Set where notes and the cache are saved (persists across sessions). |
 | `/read-language <chinese\|english>` | Switch the explanation language (persists across sessions). |
 
-`/read-store` and `/read-language` write a small JSON config (`~/.claude/paper_reading_config.json`) that `/read` consults on every run, so your preferences persist across sessions.
+`/read-store` and `/read-language` write a small JSON config (`~/.claude/paper_reading_config.json`) that `/read` and `/read-search` consult on every run, so your preferences persist across sessions.
+
+## Discovering papers with /read-search
+
+`/read` reads one paper. `/read-search` finds the papers worth reading — comprehensively. Give it a topic, optionally scoped to a top-tier venue, and it runs an independent, multi-angle sweep so you don't end up with two hits and a false sense of coverage.
+
+```text
+/read-search self-evolution like AlphaEvolve
+/read-search cvpr2027 stereo video generation
+/read-search 2D-to-3D video conversion like StereoCrafter
+```
+
+The conference part is **optional** and restricted to the venues that matter (CCF-A plus top-tier B like ECCV/EMNLP): `neurips`, `icml`, `iclr`, `aaai`, `ijcai`, `cvpr`, `iccv`, `eccv`, `acl`, `emnlp`, `naacl`, `siggraph`, … with or without a year. If the first token isn't a recognized venue, the whole input is treated as the topic.
+
+The point is breadth. For *"2D-to-3D like StereoCrafter"* the expectation is the seed **and** its neighborhood — StereoPilot, M2SVID, StereoWorld, Elastic3D, Deep3D — not just StereoCrafter twice. So the skill:
+
+- **Routes by venue family** — this is the key to the hard filter:
+  - **OpenReview venues (ICLR / NeurIPS / ICML)**: logs in via the official `openreview-py` SDK to bypass OpenReview's Cloudflare JS challenge (anonymous curl/requests all get `403 ChallengeRequired`, regardless of IP or VPN). Credentials are stored locally at `~/.claude/openreview_credentials.json` and prompted for once on first use. It then queries `content.venueid=<venue>.cc/<year>/Conference` to fetch the **verified accepted list**, with each paper's acceptance tier (`Oral`/`Spotlight`/`Poster`/`regular`) read straight from the `content.venue` field.
+  - **CVF venues (CVPR / ICCV / WACV / ECCV)**: scrapes `openaccess.thecvf.com` directly (no Cloudflare).
+  - **ACL / AAAI / SIGGRAPH / ACM**: fetches the proceedings pages.
+- **arXiv over plain HTTPS** — `https://export.arxiv.org/api/query` is directly reachable from mainland China (no proxy needed); queries are built with `+AND+` joins or quoted phrases to avoid the loose-OR false positives a bare space-separated query produces.
+- **Parses seeds** — named anchor papers (AlphaEvolve, StereoCrafter) *and* the conceptual task (self-evolution, 2D-to-3D) — then searches around both.
+- **Sweeps multiple sources in parallel** — arXiv API, Semantic Scholar, Papers With Code, and DBLP (all free, no keys), plus 4–8 web searches with synonym variants.
+- **Snowballs the citation graph** — for the top seeds it pulls both their *references* (predecessors) and *citations* (successors) via Semantic Scholar. This is the step that surfaces the neighbors a flat keyword search misses.
+- **Finds real code repos** — for each hit (especially seeds) it scrapes the arXiv HTML full text for GitHub/project links, then cross-checks with GitHub reverse search; repos are never invented, and the field is omitted when none is found.
+- **Dedups and curates** — by arXiv id then fuzzy title, then groups into Anchor / Related / Recent-SOTA / Foundational.
+
+The result is a **list** (not a table) in chat — each item is a one-line intuition plus `arXiv`/`forum`/`code`/`page` links (lines omitted when absent) — and a dated digest saved to `<store>/_search/` alongside your reading notes. Same honesty rules as `/read`: never invent a paper, arXiv id, or repo; tag snippet-only matches; if a venue's accepted list is genuinely unobtainable (and the user won't provide OpenReview credentials), say so and offer the no-venue preprint search instead — never substitute preprints for accepted papers.
 
 ## Installation
 
@@ -61,7 +89,7 @@ These are standard Claude Code skills.
 
 ```bash
 # 1. Clone the repo
-git clone https://github.com/<your-github-username>/paper-reading-skills.git
+git clone https://github.com/RuiqiuWang/Better-Paper-Reading-.git
 
 # 2. Copy (or symlink) the skills into your Claude Code skills directory
 cp -r paper-reading-skills/skills/* ~/.claude/skills/
@@ -79,6 +107,7 @@ cp -r paper-reading-skills/skills/* ~/.claude/skills/
 Then run:
 ```
 /read https://arxiv.org/abs/2401.12345
+/read-search self-evolution like AlphaEvolve
 ```
 
 ## How it works under the hood
@@ -97,13 +126,16 @@ A few non-obvious design choices separate *"it ingested the PDF"* from *"it actu
 paper-reading-skills/
 ├── README.md
 ├── LICENSE
+├── install.sh               # copies the skills into ~/.claude/skills/
 └── skills/
     ├── read/                  # the main reading skill
     │   ├── SKILL.md
     │   └── assets/paper_template.html
     ├── read-store/            # set the note-library path
     │   └── SKILL.md
-    └── read-language/         # switch explanation language
+    ├── read-language/         # switch explanation language
+    │   └── SKILL.md
+    └── read-search/           # discover papers on a topic
         └── SKILL.md
 ```
 
