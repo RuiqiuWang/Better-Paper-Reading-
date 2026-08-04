@@ -5,10 +5,15 @@
 </p>
 
 <p align="center">
-  <img alt="version" src="https://img.shields.io/badge/version-v1.0.0-blue">
+  <img alt="version" src="https://img.shields.io/badge/version-v2.0.0-blue">
   <img alt="license" src="https://img.shields.io/badge/license-MIT-green">
   <img alt="platform" src="https://img.shields.io/badge/platform-Claude%20Code-purple">
   <img alt="status" src="https://img.shields.io/badge/status-stable-brightgreen">
+  <a href="./README.zh-CN.md"><img alt="中文" src="https://img.shields.io/badge/README-中文-red"></a>
+</p>
+
+<p align="center">
+  <sub><a href="./README.md">English</a> &nbsp;|&nbsp; <b>中文</b> &nbsp;|&nbsp; <a href="./README.zh-CN.md">简体中文</a></sub>
 </p>
 
 ---
@@ -102,12 +107,14 @@ cp -r paper-reading-skills/skills/* ~/.claude/skills/
 **Requirements:**
 - [Claude Code](https://claude.com/claude-code) (CLI / desktop / IDE extension).
 - `curl` for fetching arXiv/GitHub (preinstalled on macOS/Linux; bundled with Git for Windows).
-- Internet access to `arxiv.org` / `ar5iv.labs.arxiv.org` / `github.com`.
+- Python 3.8+ with `openreview-py` (for `/read-search` on OpenReview venues — ICLR/NeurIPS/ICML). Install: `pip install openreview-py` (in China: `-i https://pypi.tuna.tsinghua.edu.cn/simple`). On first use of an OpenReview venue, you'll be prompted for your openreview.net credentials (free to register); they're stored locally at `~/.claude/openreview_credentials.json`.
+- Internet access to `arxiv.org` / `github.com` / `openreview.net`.
 
 Then run:
 ```
 /read https://arxiv.org/abs/2401.12345
 /read-search self-evolution like AlphaEvolve
+/read-search icml2026 stereo video generation
 ```
 
 ## How it works under the hood
@@ -125,8 +132,9 @@ A few non-obvious design choices separate *"it ingested the PDF"* from *"it actu
 ```
 paper-reading-skills/
 ├── README.md
+├── README.zh-CN.md            # 中文版 README
 ├── LICENSE
-├── install.sh               # copies the skills into ~/.claude/skills/
+├── install.sh                 # copies the skills into ~/.claude/skills/
 └── skills/
     ├── read/                  # the main reading skill
     │   ├── SKILL.md
@@ -136,7 +144,9 @@ paper-reading-skills/
     ├── read-language/         # switch explanation language
     │   └── SKILL.md
     └── read-search/           # discover papers on a topic
-        └── SKILL.md
+        ├── SKILL.md
+        ├── openreview_fetch.py    # login + fetch OpenReview accepted lists
+        └── save_credentials.py    # store OpenReview credentials locally
 ```
 
 ## Customizing the HTML
