@@ -1,7 +1,6 @@
 ---
 name: read-search
-description: Discover academic papers on a topic — comprehensively — optionally scoped to a top-tier conference. Use when the user types /read-search [conference] [topic], e.g. /read-search icml2026 stereo video generation, or /read-search self-evolution like AlphaEvolve. The conference part is optional and, when given, is a HARD filter — only papers actually accepted at that venue count. For OpenReview-hosted venues (ICLR/NeurIPS/ICML) it logs in via openreview-py (credentials stored locally, prompted once) to bypass Cloudflare and fetch the verified accepted list; for CVF venues (CVPR/ICCV/WACV/ECCV) it scrapes openaccess.thecvf.com; arXiv is queried over plain HTTPS (direct, no proxy needed in CN). Runs citation/reference snowballing around seed papers and finds each paper's code repo via arXiv HTML scraping + GitHub reverse search. Returns a list (not a table) of one-line intuitions + paper/code/project links; saves a markdown digest. Trigger whenever the user wants to find/survey/list papers in an area.
-version: 2.0.0
+description: Discover academic papers on a topic with optional conference filtering. Use for /read-search or $read-search, or requests to find, survey or list papers. Verify venue acceptance, expand around seed papers, find source and code links, and save a digest in the shared reading workspace.
 ---
 
 # read-search · comprehensive paper discovery
@@ -20,9 +19,11 @@ Find papers on a research topic — comprehensively — optionally scoped to a t
 
 ## Config
 
-Read `~/.claude/paper_reading_config.json` (shared with `/read`) for `store_dir` (default `D:/claude_paper_reading`) and `language` (default `chinese`). Save digests to `<store_dir>/_search/`; cache to `<store_dir>/_cache/search_<slug>/`. Output in the configured language.
+Run the sibling read-main `host_config.py --host codex` (Codex) or `--host claude` (Claude Code) to resolve the config file, `store_dir` and `language`. Config roots honor CODEX_HOME / CLAUDE_CONFIG_DIR, defaulting to ~/.codex / ~/.claude. Default store is D:/claude_paper_reading on Windows with D:, otherwise ~/PaperReading; default language is chinese. Save digests to `<store_dir>/_search/`; cache to `<store_dir>/_cache/search_<slug>/`. Output in the configured language.
 
 ## Step 0 · Parse args + venue routing
+
+First read `../read-main/references/session-registration.md`. Extract the optional trailing `--session <id>` before parsing the venue/topic; otherwise allocate a fresh session ID. Each new search gets its own output path and history entry.
 
 1. Match first token(s) against venues. **Recognized**: `neurips`/`nips`, `icml`, `iclr`, `aaai`, `ijcai`, `cvpr`, `iccv`, `eccv`, `wacv`, `acl`, `emnlp`, `naacl`, `coling`, `siggraph`, `siggraph-asia`, `kdd`, `sigir`, `www`. Accept `icml` or `icml2026` or `icml 2026`.
 2. If matched → `conference={venue,year?}`, topic=rest. Else `conference=null`, topic=all.
@@ -38,17 +39,17 @@ Read `~/.claude/paper_reading_config.json` (shared with `/read`) for `store_dir`
 
 ### Step 1A · OpenReview venues (ICLR / NeurIPS / ICML) — `openreview-py` login
 
-**Why login**: OpenReview's API (`api2.openreview.net`) is behind Cloudflare JS challenge. Anonymous curl/requests/scrapy all get `403 ChallengeRequired` — verified regardless of IP, headers, or VPN proxy. The **only** reliable bypass is authenticated access via `openreview-py` (the official SDK), which uses a login session that Cloudflare lets through.
+**Access**: Use the official OpenReview SDK to fetch venue records. Availability and authentication requirements can vary. If access fails, report the actual failure and use verified public proceedings when available; do not claim login guarantees access.
 
-**Credentials** — stored in `~/.claude/openreview_credentials.json`:
+**Credentials** — stored in `<HOST_CONFIG_DIR>/openreview_credentials.json`:
 ```json
 {"username": "your@email", "password": "yourpassword"}
 ```
 - If the file exists and has both fields → use it.
-- If missing/empty → **stop and prompt the user**: "首次使用:请提供 OpenReview 账号(邮箱)和密码,用于登录拉取录用列表。凭据会存到 `~/.claude/openreview_credentials.json`。如无账号去 openreview.net 免费注册。" Collect username + password, write the file (chmod 600 if possible), then proceed. **Never echo the password back.**
+- If missing/empty → **stop and prompt the user**: "首次使用:请提供 OpenReview 账号(邮箱)和密码,用于登录拉取录用列表。凭据会存到 `<HOST_CONFIG_DIR>/openreview_credentials.json`。如无账号去 openreview.net 免费注册。" Prefer having the user set OPENREVIEW_USERNAME / OPENREVIEW_PASSWORD locally and run save_credentials.py --host HOST; do not request a password in chat. Apply restrictive permissions when supported. **Never echo the password back.**
 - The helper script `openreview_fetch.py` (in this skill's directory) reads this file, OR accepts `OPENREVIEW_USERNAME`/`OPENREVIEW_PASSWORD` env vars. Call it:
 ```bash
-python <skill_dir>/openreview_fetch.py <venue> <year> [--proxy http://127.0.0.1:7890]
+python <skill_dir>/openreview_fetch.py <venue> <year> --host <codex|claude> [--proxy http://127.0.0.1:7890]
 ```
   It prints `SUMMARY: <venue><year> total=N by_venue={...}` and `FILE: <path>` to stdout. `--proxy` is optional (use only if direct fails; a local VPN like 7890 can help with TLS, though login itself bypasses Cloudflare).
 - Requires `openreview-py`: install once (`pip install openreview-py`, or `-i https://pypi.tuna.tsinghua.edu.cn/simple` in CN). If missing, install it.
@@ -133,7 +134,7 @@ In chat, in the configured language, as **list items** — never a markdown tabl
 ```
 Lead with a short framing (topic parse, seeds, sources run, caveats — including if the accepted list was unobtainable → stopped). End with **gaps/next steps** + offer to `/read <link>` any item.
 
-Save the same content as `<store_dir>/_search/<YYYY-MM-DD>_<slug>.md`; tell the user the path.
+Save the same content as `<store_dir>/_search/<YYYY-MM-DD>_<slug>--<session-id>.md`. Follow `../read-main/references/session-registration.md` to register it with type `search` and open the workspace at this session. The shared helper creates a readable local HTML view of the Markdown. Tell the user the workspace and digest paths.
 
 ## Honesty rules
 
@@ -141,7 +142,7 @@ Save the same content as `<store_dir>/_search/<YYYY-MM-DD>_<slug>.md`; tell the 
 - **The conference filter is sacred.** Venue given + accepted list unobtainable → stop, don't substitute preprints.
 - Distinguish verified (abstract fetched) vs snippet-only (`*`).
 - Code links come only from Step 3's three routes — never guessed.
-- **Credentials**: store only in `~/.claude/openreview_credentials.json`; never print the password; never write it into scripts, digests, or commits.
+- **Credentials**: store only in `<HOST_CONFIG_DIR>/openreview_credentials.json`; never print the password; never write it into scripts, digests, or commits.
 - Today's date from context; don't call `Date.now()`.
 
 ## Appendix · the verified access methods (2026-08, CN environment)

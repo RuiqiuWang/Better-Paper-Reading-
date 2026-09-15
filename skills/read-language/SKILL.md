@@ -1,29 +1,15 @@
 ---
 name: read-language
-description: Switch the language the /read skill uses to explain papers. Use when the user types /read-language chinese or /read-language english. Persists the choice to a config file so /read uses it on every future run.
-version: 1.0.0
+description: Switch paper explanation language. Use for /read-language or $read-language chinese or english. Preserve other host settings.
 ---
 
-# read-language · switch explanation language
+# read-language
 
-Tells `/read` whether to explain papers in Chinese or English. Run once; it persists across sessions.
+Supports Claude Code `/read-language` and Codex `$read-language`.
 
-## When invoked
+1. Resolve sibling `../read-main/host_config.py`. Run it with `--host codex` in Codex or `--host claude` in Claude Code to read the effective configuration and its actual path. An installed host marker provides the default; explicit host takes precedence.
+2. Parse the requested language; normalize zh/中 to chinese and en/英 to english. If missing or invalid, report the current value and ask for a valid value without changing configuration.
+3. Run the helper with `--host HOST --language VALUE`, quoting filesystem arguments safely. It preserves unknown fields and the other preferences. Changing the store clears the old dashboard URL, creates the new cache directory, and leaves existing notes in place. Do not claim to migrate notes.
+4. Confirm the resulting language in the selected language.
 
-`/read-language <chinese|english>` — e.g. `/read-language english`.
-
-## Steps
-
-1. Take the language from args. Accept and normalize these aliases: `chinese`/`zh`/`中` → `chinese`; `english`/`en`/`英` → `english`. If missing or invalid, read the config (below), tell the user the current `language`, and list the valid options.
-2. Read the config file at `~/.claude/paper_reading_config.json` if it exists (JSON with keys `store_dir` and `language`). Preserve any existing `store_dir` value.
-3. Write the config back with `language` set to the normalized value, keeping `store_dir` intact. Use the Write tool.
-4. Confirm to the user, e.g.:
-   - After setting `chinese`: "论文讲解语言已切换为中文。"
-   - After setting `english`: "Paper explanations will now be in English."
-   (Reply in the newly selected language.)
-
-## Notes
-
-- The default `language` (before this is ever run) is `chinese`.
-- `/read` reads this config at the start of every run and writes both the chat explanation and the HTML note in the chosen language.
-- Config file path resolves `~` to the user home (e.g. `C:/Users/<you>/.claude/paper_reading_config.json` on Windows).
+Configuration: Codex uses `$CODEX_HOME/paper_reading_config.json` (default `~/.codex`); Claude Code uses `$CLAUDE_CONFIG_DIR/paper_reading_config.json` (default `~/.claude`). Never copy credentials or settings between hosts implicitly. Both hosts can share notes by explicitly choosing the same store directory.

@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="zh-CN">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>PaperReading · 阅读工作台</title><style>/*__STYLES__*/</style></head>
+<body>
+<svg class="sprite" xmlns="http://www.w3.org/2000/svg"><defs>
+<symbol id="i-book" viewBox="0 0 24 24"><path d="M12 5c-3-2-6-2-9-1v15c3-1 6-1 9 1 3-2 6-2 9-1V4c-3-1-6-1-9 1Zm0 0v15"/></symbol>
+<symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+<symbol id="i-search" viewBox="0 0 24 24"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 5 5"/></symbol>
+<symbol id="i-folder" viewBox="0 0 24 24"><path d="M3 7V5h7l2 3h9v12H3Z"/></symbol>
+<symbol id="i-pin" viewBox="0 0 24 24"><path d="m8 3 8 0-1 6 4 4v2H5v-2l4-4Zm4 12v6"/></symbol>
+<symbol id="i-chat" viewBox="0 0 24 24"><path d="M21 11a9 9 0 0 1-9 9H4l-2 2 1-7A9 9 0 1 1 21 11Z"/></symbol>
+<symbol id="i-more" viewBox="0 0 24 24"><circle cx="5" cy="12" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/></symbol>
+<symbol id="i-chevron" viewBox="0 0 24 24"><path d="m9 5 7 7-7 7"/></symbol>
+<symbol id="i-panel" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M9 4v16"/></symbol>
+<symbol id="i-arrow" viewBox="0 0 24 24"><path d="M7 17 17 7M7 7h10v10"/></symbol>
+<symbol id="i-archive" viewBox="0 0 24 24"><path d="M4 8h16v12H4Z M3 3h18v5H3Z M9 12h6"/></symbol>
+</defs></svg>
+<button id="backdrop" aria-label="收起侧边栏" tabindex="-1"></button>
+<aside id="sidebar" aria-label="阅读会话侧边栏">
+  <div class="brand"><span class="brand-mark"><svg><use href="#i-book"/></svg></span><span>PaperReading<small>你的阅读工作台</small></span><button id="collapse" class="icon-button" title="收起侧边栏" aria-label="收起侧边栏"><svg><use href="#i-panel"/></svg></button></div>
+  <label class="search-box"><svg><use href="#i-search"/></svg><input id="search" type="search" placeholder="搜索会话" aria-label="搜索会话"></label>
+  <nav id="navigation" aria-label="项目和会话"></nav>
+  <footer><button id="archive-view"><svg><use href="#i-archive"/></svg><span>已归档</span><span id="archive-count" class="count"></span></button><button id="settings"><span class="avatar">P</span><span class="footer-text">本地阅读库<small id="library-count"></small></span><svg><use href="#i-more"/></svg></button></footer>
+</aside>
+<main>
+  <header><button id="expand" class="icon-button" title="展开侧边栏" aria-label="展开侧边栏"><svg><use href="#i-panel"/></svg></button><div id="breadcrumb">阅读工作台</div><a id="open-note" target="_blank" rel="noopener noreferrer" hidden>独立打开 <svg><use href="#i-arrow"/></svg></a></header>
+  <div id="storage-warning" role="alert" hidden></div>
+  <section id="welcome" class="welcome">
+    <div class="eyebrow">A SPACE FOR YOUR IDEAS</div><div class="welcome-logo"><svg><use href="#i-book"/></svg></div>
+    <h1>从整体，读到本质。</h1><p class="intro">在助手中运行 <code id="read-command">/read 论文链接</code>，<br>阅读完成后，工作台会直接打开刚生成的笔记。</p>
+    <div id="recent-sessions" class="recent-list" aria-label="最近阅读"></div>
+    <p class="home-foot">在左侧项目菜单中，可为该项目新建阅读会话。</p>
+  </section>
+  <section id="project-session" class="welcome" hidden>
+    <div class="eyebrow">READ WITHIN A PROJECT</div><div class="welcome-logo"><svg><use href="#i-folder"/></svg></div>
+    <h1>在项目中开始阅读</h1><p id="composer-project" class="intro"></p>
+    <form id="composer"><div class="composer-top"><select id="mode" aria-label="会话类型"><option value="read">精读论文</option><option value="search">检索论文</option></select></div><textarea id="request" rows="3" required placeholder="粘贴 arXiv / GitHub 链接，或写下想研究的主题…" aria-label="论文链接或研究主题"></textarea><div class="composer-bottom"><span>阅读结果会保留在这个项目中</span><button type="submit" class="primary">创建会话 <svg><use href="#i-arrow"/></svg></button></div></form>
+    <button id="cancel-project-session" class="nav-back">返回阅读库</button>
+  </section>
+  <section id="reader" hidden></section>
+</main>
+<div id="menu" class="menu" role="menu" hidden></div>
+<dialog id="dialog"><form id="dialog-form"><h2 id="dialog-title"></h2><div id="dialog-body"></div><div class="dialog-actions"><button type="button" id="dialog-cancel">取消</button><button type="submit" class="primary" id="dialog-submit">保存</button></div></form></dialog>
+<input id="import-file" type="file" accept="application/json,.json" hidden>
+<div id="toast" role="status" hidden></div>
+<script>window.PAPER_READING_DATA = /*__DATA__*/;</script><script>/*__APP__*/</script>
+</body></html>

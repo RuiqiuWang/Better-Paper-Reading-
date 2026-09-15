@@ -8,12 +8,15 @@ openreview 登录 + 拉取会议录用论文列表的辅助脚本。
     venue: ICML / ICLR / NeurIPS (OpenReview 类)
   输出 JSON 到 stdout(最后两行是 SUMMARY: ... 和 FILE: <path>)
 
-凭据文件: ~/.claude/openreview_credentials.json  (首次运行时提示输入)
+凭据文件: 当前宿主配置目录中的 openreview_credentials.json；--host codex|claude  (首次运行时提示输入)
   {"username": "...", "password": "..."}
 """
 import os, sys, json, time, getpass
 
-CRED_FILE = os.path.join(os.path.expanduser("~"), ".claude", "openreview_credentials.json")
+from pathlib import Path
+sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "read-main"))
+from host_config import config_root
+CRED_FILE = None
 
 def load_or_prompt_credentials():
     """读凭据文件;不存在则交互式提示输入并保存。返回 (username, password) 或 None。"""
@@ -36,6 +39,9 @@ def load_or_prompt_credentials():
     return None
 
 def main():
+    global CRED_FILE
+    host = sys.argv[sys.argv.index("--host") + 1] if "--host" in sys.argv else None
+    CRED_FILE = str(config_root(host) / "openreview_credentials.json")
     if len(sys.argv) < 3:
         print("ERROR: 用法 python openreview_fetch.py <venue> <year> [--proxy URL]"); sys.exit(2)
     venue = sys.argv[1].upper()

@@ -1,31 +1,15 @@
 ---
 name: read-store
-description: Set where the /read skill saves paper notes and its download cache. Use when the user types /read-store <path> to change the output directory for paper-reading notes. Persists the choice to a config file so /read uses it on every future run.
-version: 1.0.0
+description: Set the paper note and cache directory. Use for /read-store or $read-store PATH. Preserve other host settings.
 ---
 
-# read-store · set the paper-note library location
+# read-store
 
-Tells `/read` where to save HTML notes and cached paper files. Run once; it persists across sessions.
+Supports Claude Code `/read-store` and Codex `$read-store`.
 
-## When invoked
+1. Resolve sibling `../read-main/host_config.py`. Run it with `--host codex` in Codex or `--host claude` in Claude Code to read the effective configuration and its actual path. An installed host marker provides the default; explicit host takes precedence.
+2. Parse the requested path; expand ~ and use an absolute path. If missing or invalid, report the current value and ask for a valid value without changing configuration.
+3. Run the helper with `--host HOST --store VALUE`, quoting filesystem arguments safely. It preserves unknown fields and the other preferences. Changing the store clears the old dashboard URL, creates the new cache directory, and leaves existing notes in place. Do not claim to migrate notes.
+4. Confirm the resulting note directory and its _cache directory.
 
-`/read-store <path>` — e.g. `/read-store D:/my/papers` or `/read-store ~/papers`.
-
-## Steps
-
-1. Take the path from args. If no path is given, read the config file (below) and tell the user the current `store_dir`, then ask for a path.
-2. Normalize it: expand `~` to the home directory, use forward slashes. A Windows drive path like `D:/...` is fine.
-3. Read the config file at `~/.claude/paper_reading_config.json` if it exists (JSON with keys `store_dir` and `language`). Preserve any existing `language` value.
-4. Write the config back with `store_dir` set to the normalized path, keeping `language` intact. Use the Write tool.
-5. Ensure the directory exists: `mkdir -p "<path>/_cache"`.
-6. Confirm to the user, e.g.:
-   - Chinese: "论文笔记将保存到 `<path>`，缓存在 `<path>/_cache`。"
-   - English: "Paper notes will be saved to `<path>`, cache at `<path>/_cache`."
-   (Reply in whichever language the user has been using.)
-
-## Notes
-
-- The default `store_dir` (before this is ever run) is `D:/claude_paper_reading`.
-- This skill only writes config; it does not read any paper. `/read` consults this config at the start of every run.
-- Config file path resolves `~` to the user home (e.g. `C:/Users/<you>/.claude/paper_reading_config.json` on Windows).
+Configuration: Codex uses `$CODEX_HOME/paper_reading_config.json` (default `~/.codex`); Claude Code uses `$CLAUDE_CONFIG_DIR/paper_reading_config.json` (default `~/.claude`). Never copy credentials or settings between hosts implicitly. Both hosts can share notes by explicitly choosing the same store directory.

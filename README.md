@@ -1,158 +1,142 @@
 # PaperReading Skills
 
-<p align="center">
-  <em>A Claude Code skill suite that reads an arXiv paper or GitHub repository the way a great advisor would — intuition first, then the math, then the code — and surveys a research area to surface every paper worth reading.</em>
-</p>
+**Read papers, keep an organized HTML library, and resolve questions in context — in Codex or Claude Code.**
 
-<p align="center">
-  <img alt="version" src="https://img.shields.io/badge/version-v2.0.0-blue">
-  <img alt="license" src="https://img.shields.io/badge/license-MIT-green">
-  <img alt="platform" src="https://img.shields.io/badge/platform-Claude%20Code-purple">
-  <img alt="status" src="https://img.shields.io/badge/status-stable-brightgreen">
-  <a href="./README.zh-CN.md"><img alt="中文" src="https://img.shields.io/badge/README-中文-red"></a>
-</p>
+[简体中文](README.zh-CN.md) · [Changelog](CHANGELOG.md) · [MIT license](LICENSE)
 
-<p align="center">
-  <sub><a href="./README.md">English</a> &nbsp;|&nbsp; <b>中文</b> &nbsp;|&nbsp; <a href="./README.zh-CN.md">简体中文</a></sub>
-</p>
+## What is included
 
----
+- **Paper explanations:** a technical overview, then an intuitive overview; key ideas explained through motivation, source-grounded reasoning and intuitive interpretation as needed.
+- **Reading workspace:** persistent left sidebar with projects, pins, search, archives and reading history. Click a session to open its HTML. New drafts can be created inside projects.
+- **Automatic delivery:** completing a reading opens its workspace session and returns clickable workspace and note links. If opening fails, the assistant reports it and supplies the links.
+- **Rewrite follow-ups:** integrate an answer into the relevant passage while preserving context, formulas, sources and existing annotations.
+- **Comment follow-ups:** underline a knowledge point and add a square numbered badge. Click to read the question and answer in the right sidebar. Switch between Global and numbered threads; continue related questions in the same thread.
+- **Paper discovery:** search a topic, optionally constrain results to verified conference acceptances, expand around seed papers and collect paper/code links.
 
-## What is this?
+## Install
 
-**PaperReading Skills** is a set of four Claude Code skills that turn *"read this paper and explain it to me"* and *"find me the papers in this area"* into single commands. Point it at an arXiv link or a GitHub repository, and it fetches the paper, reads it in a focused way, and produces a structured, three-layer explanation — from a plain-language intuition of the problem, down to per-equation mathematical derivations and pseudocode of the reference implementation. Every explanation is rendered as a polished, LaTeX-ready HTML note you can keep and re-read. Point it at a research topic instead, and it runs a multi-source sweep to list every relevant paper with arXiv links, code, and one-line summaries.
+Requires **Python 3.8+** and a local Codex or Claude Code environment with file and shell access. The reading workspace and follow-up helpers use Python's standard library. `openreview-py` is optional and needed only for searches using the OpenReview helper. Internet access is needed to fetch papers and external assets such as MathJax.
 
-It exists because **explaining a paper well is a repeatable craft, not a one-off.** The same ladder of understanding — *intuition → method → details* — applies whether the paper is about stereo vision, diffusion bridges, or rolling checksums. Encoding that ladder as a skill means you never have to re-explain *how* you want a paper explained. You just say `/read <url>`.
+```sh
+git clone https://github.com/RuiqiuWang/Better-Paper-Reading-.git
+cd Better-Paper-Reading-
+python install.py --target both
+```
 
-## The reading method: intuition → math → code
+Use `--target codex` or `--target claude` to install for one host. On systems where Python is named `python3`, use that executable instead.
 
-Every paper is explained in three escalating layers. The guiding principle is simple: **never drop the reader into equations before they know what the equations are *for*.**
+```powershell
+# Windows PowerShell alternative
+.\install.ps1 -Target both
+# Custom Python location: add -Python "C:/path/to/python.exe"
+```
 
-### Layer 1 — The problem, in plain language
-What problem does this paper solve? Why is it hard, why do prior approaches fall short, why does it matter? No math, no code. The bar: someone *outside* the field should grasp what's being attempted.
+```sh
+# macOS / Linux / Git Bash alternative
+bash install.sh --target both
+```
 
-### Layer 2 — The method, intuitively
-What did the authors actually do, stated without formulas? And the key question — *why does it work?* What insight did it capture? If there's a one-line "aha" (for example, rsync's *"slide the window instead of fixing block boundaries"*), it gets named explicitly here.
+Preview without writing: `python install.py --target both --dry-run`.
 
-### Layer 3 — The details, with math and code
-For each **core contribution** (not every section — the focus stays on the paper's real novelty):
+| Host | Personal skill directory | Explicit invocation |
+|---|---|---|
+| Codex | `~/.agents/skills` for a new installation | `$read URL` |
+| Claude Code | `~/.claude/skills` (honors `CLAUDE_CONFIG_DIR`) | `/read URL` |
 
-1. **Intuition first** — what is this step doing, and why is it needed.
-2. **Then the math** — the equations, with *every derivation step accompanied by a sentence on what it does and why*. A bare equation dump teaches nothing; walking the reader through "what this step means" does. Symbols are defined in plain language on first appearance.
-3. **Then the code** — if the paper is open-sourced, the reference implementation is reduced to ~10–30 lines of annotated pseudocode, mapped back to the paper's steps. Where the code diverges from the paper (engineering shortcuts, tricks), it's called out.
+The installer reuses an existing PaperReading installation under `~/.codex/skills` (or `CODEX_HOME/skills`) instead of creating duplicates. To choose another directory, use `--target codex --skills-dir PATH` or `--target claude --skills-dir PATH`. Existing skill folders are backed up under the destination parent's `paper-reading-backups/`. Installation does not copy or reset your reading settings, credentials or notes. Start a new task or reload the host if its skill menu has not refreshed.
 
-## How notes are stored
+Host conventions: [Codex skills documentation](https://learn.chatgpt.com/docs/build-skills), [Claude Code skills documentation](https://code.claude.com/docs/en/skills).
 
-Notes don't vanish into the chat. Every read produces a standalone HTML file in your configured library, opened automatically in your browser.
+## Commands
 
-- **Output library** — set once with `/read-store <path>` (default: `D:/claude_paper_reading/`). Each paper becomes `<title>.html` and accumulates into a personal paper-notes collection.
-- **Cache** — the fetched paper (arXiv HTML/PDF, fetched GitHub sources) lands in `<store>/_cache/`, so re-reading a paper doesn't refetch it.
-- **Rendering** — HTML uses [MathJax](https://www.mathjax.org/) for LaTeX, with a clean light theme and color-coded callouts: <span style="color:#0b62c4">blue = intuition/scene</span>, <span style="color:#666">gray = meaning</span>, <span style="color:#b8791a">orange = conclusion</span>, <span style="color:#c0392b">red = caveat/uncertain</span>, <span style="color:#1a7f45">green = takeaway</green></span>.
-- **Language** — switch the explanation language with `/read-language chinese|english` (default: Chinese). Both the chat summary and the HTML note follow this setting.
+Enter these in the assistant conversation, not a shell:
 
-## The four commands
+| Codex | Claude Code | Purpose |
+|---|---|---|
+| `$read URL` | `/read URL` | Explain a paper or paper-linked GitHub repository |
+| `$read-main` | `/read-main` | Open and organize the reading workspace |
+| `$read-search [venue] topic` | `/read-search [venue] topic` | Discover papers, optionally at a specific conference |
+| `$read-rewrite question` | `/read-rewrite question` | Rewrite the relevant explanation in the original HTML |
+| `$read-comment question` | `/read-comment question` | Add or continue an inline/global question thread |
+| `$read-store PATH` | `/read-store PATH` | Set the note and cache directory |
+| `$read-language english` | `/read-language english` | Choose `english` or `chinese` |
 
-| Command | Purpose |
-|---|---|
-| `/read <arxiv-or-github-url>` | Read a paper and produce a three-layer explanation + HTML note. |
-| `/read-search [conference] <topic>` | Discover papers on a topic — comprehensively — optionally scoped to a top-tier venue. |
-| `/read-store <path>` | Set where notes and the cache are saved (persists across sessions). |
-| `/read-language <chinese\|english>` | Switch the explanation language (persists across sessions). |
+The follow-up instructions also recognize `/read_rewrite` and `/read_comment` as natural-language requests. Native skill menus use the hyphenated names above.
 
-`/read-store` and `/read-language` write a small JSON config (`~/.claude/paper_reading_config.json`) that `/read` and `/read-search` consult on every run, so your preferences persist across sessions.
+### First reading
 
-## Discovering papers with /read-search
+1. Set your library with `$read-store ~/PaperReading` or `/read-store ~/PaperReading`.
+2. Run `$read https://arxiv.org/abs/2409.07447` or the Claude `/read` equivalent.
+3. The assistant saves the note, registers a session and opens that paper in the workspace. Use the sidebar to revisit it, pin it or move it to a project.
+4. Ask a follow-up in the same task. Add `--session ID` when you need to specify a different saved paper.
 
-`/read` reads one paper. `/read-search` finds the papers worth reading — comprehensively. Give it a topic, optionally scoped to a top-tier venue, and it runs an independent, multi-angle sweep so you don't end up with two hits and a false sense of coverage.
+### Follow-up examples
 
 ```text
-/read-search self-evolution like AlphaEvolve
-/read-search cvpr2027 stereo video generation
-/read-search 2D-to-3D video conversion like StereoCrafter
+# Codex
+$read-rewrite Why does this step need that assumption?
+$read-comment How should I interpret this equation?
+$read-comment --comment 1 Can you give a concrete example?
+$read-comment --comment global How do these components fit together?
+
+# Claude Code
+/read-rewrite Why does this step need that assumption?
+/read-comment --comment 1 Can you give a concrete example?
 ```
 
-The conference part is **optional** and restricted to the venues that matter (CCF-A plus top-tier B like ECCV/EMNLP): `neurips`, `icml`, `iclr`, `aaai`, `ijcai`, `cvpr`, `iccv`, `eccv`, `acl`, `emnlp`, `naacl`, `siggraph`, … with or without a year. If the first token isn't a recognized venue, the whole input is treated as the topic.
+A rewrite edits the relevant passage in place. A comment preserves the passage, adds an underline and badge, and stores the question/answer in the right sidebar. Global holds questions about the whole paper; it is separate from the numbered threads. Answers inherit the same reading style as the main explanation.
 
-The point is breadth. For *"2D-to-3D like StereoCrafter"* the expectation is the seed **and** its neighborhood — StereoPilot, M2SVID, StereoWorld, Elastic3D, Deep3D — not just StereoCrafter twice. So the skill:
+The right sidebar offers a Codex/Claude Code command selector. Its input copies a continuation command; **send that command in the assistant to generate the answer**. The HTML does not call a model itself. Follow-ups update the original session, keep earlier questions, and back up the previous HTML before editing. A stale file hash or ambiguous anchor stops the edit for reinspection.
 
-- **Routes by venue family** — this is the key to the hard filter:
-  - **OpenReview venues (ICLR / NeurIPS / ICML)**: logs in via the official `openreview-py` SDK to bypass OpenReview's Cloudflare JS challenge (anonymous curl/requests all get `403 ChallengeRequired`, regardless of IP or VPN). Credentials are stored locally at `~/.claude/openreview_credentials.json` and prompted for once on first use. It then queries `content.venueid=<venue>.cc/<year>/Conference` to fetch the **verified accepted list**, with each paper's acceptance tier (`Oral`/`Spotlight`/`Poster`/`regular`) read straight from the `content.venue` field.
-  - **CVF venues (CVPR / ICCV / WACV / ECCV)**: scrapes `openaccess.thecvf.com` directly (no Cloudflare).
-  - **ACL / AAAI / SIGGRAPH / ACM**: fetches the proceedings pages.
-- **arXiv over plain HTTPS** — `https://export.arxiv.org/api/query` is directly reachable from mainland China (no proxy needed); queries are built with `+AND+` joins or quoted phrases to avoid the loose-OR false positives a bare space-separated query produces.
-- **Parses seeds** — named anchor papers (AlphaEvolve, StereoCrafter) *and* the conceptual task (self-evolution, 2D-to-3D) — then searches around both.
-- **Sweeps multiple sources in parallel** — arXiv API, Semantic Scholar, Papers With Code, and DBLP (all free, no keys), plus 4–8 web searches with synonym variants.
-- **Snowballs the citation graph** — for the top seeds it pulls both their *references* (predecessors) and *citations* (successors) via Semantic Scholar. This is the step that surfaces the neighbors a flat keyword search misses.
-- **Finds real code repos** — for each hit (especially seeds) it scrapes the arXiv HTML full text for GitHub/project links, then cross-checks with GitHub reverse search; repos are never invented, and the field is omitted when none is found.
-- **Dedups and curates** — by arXiv id then fuzzy title, then groups into Anchor / Related / Recent-SOTA / Foundational.
+## Reading style
 
-The result is a **list** (not a table) in chat — each item is a one-line intuition plus `arXiv`/`forum`/`code`/`page` links (lines omitted when absent) — and a dated digest saved to `<store>/_search/` alongside your reading notes. Same honesty rules as `/read`: never invent a paper, arXiv id, or repo; tag snippet-only matches; if a venue's accepted list is genuinely unobtainable (and the user won't provide OpenReview credentials), say so and offer the no-venue preprint search instead — never substitute preprints for accepted papers.
+Start with the whole paper: explain the task, bottleneck and proposed method in professional technical terms, then describe the same mechanism intuitively. Dive into important parts as useful:
 
-## Installation
+1. What is this part trying to solve, and what is the approach?
+2. What does the original paper actually define, derive, prove or implement? Explain assumptions and reasoning with source locations.
+3. After the formal details, what did this step really accomplish, and how should we understand it?
 
-These are standard Claude Code skills.
+Adapt the depth to the material. Do not force three sections, proofs, analogies or code into every explanation. Distinguish the authors' claims, proofs, experimental support, supplementary derivations and intuitive examples. Finally reconnect the components to the original problem. Full guidance: [reading-style.md](skills/read/references/reading-style.md).
 
-```bash
-# 1. Clone the repo
-git clone https://github.com/RuiqiuWang/Better-Paper-Reading-.git
+## Storage and configuration
 
-# 2. Copy (or symlink) the skills into your Claude Code skills directory
-cp -r paper-reading-skills/skills/* ~/.claude/skills/
-#    On Windows (Git Bash), that's:  C:/Users/<you>/.claude/skills/
+| Setting | Codex | Claude Code |
+|---|---|---|
+| Reading config | `$CODEX_HOME/paper_reading_config.json`, default `~/.codex/` | `$CLAUDE_CONFIG_DIR/paper_reading_config.json`, default `~/.claude/` |
+| OpenReview credentials | `openreview_credentials.json` in the same config directory | `openreview_credentials.json` in the same config directory |
 
-# 3. Start a new Claude Code session, then optionally set your note library:
-#    /read-store D:/my/papers
+Existing `store_dir` is always preserved. For a new configuration, the default is `D:/claude_paper_reading` on Windows with a D: drive; otherwise `~/PaperReading`. Default explanation language is Chinese. Both hosts can use the same note library by explicitly selecting the same directory; configuration and credentials remain separate.
+
+- Notes: `<title>--<session-id>.html`; paper/source cache: `_cache/`.
+- Searches: `_search/`; generated-note metadata: `_index.json`.
+- Workspace: `index.html`, refreshed by the registration helpers. Legacy root HTML and `_search/` / `_topic/` outputs can be imported. The optional `read-search-topic` skill is not bundled, but its `search_topic` entries are supported.
+- Follow-up backups: `.reading-history/`. Annotations and answers are embedded in the note HTML.
+- Projects, pins, renamed titles, archive flags and drafts: browser localStorage, scoped to library and browser origin/profile. Export/import organization through the bottom-left library dialog when changing browsers or origins. That backup does not include the note files.
+- Optional `dashboard_url`: a verified loopback HTTP address. The included `serve_library.py` supports in-app browsers that cannot open local files. It binds only to 127.0.0.1 and does not expose configuration files or hidden backups. Keep the process running while using its links.
+
+OpenReview credentials are optional. If needed, set `OPENREVIEW_USERNAME` and `OPENREVIEW_PASSWORD` locally and run the installed `read-search/save_credentials.py --host codex` (or `--host claude`). Never paste passwords into a repository or generated notes. Access failures must be reported; preprints must not be presented as accepted conference papers.
+
+## Repository layout
+
+```text
+install.py / install.sh / install.ps1   # shared installer and shell entry points
+skills/
+  read/                                # explanation style, figures, HTML template
+  read-main/                           # dashboard, server, registration, config, follow-ups
+  read-comment/                        # numbered and global questions
+  read-rewrite/                        # contextual passage edits
+  read-search/                         # discovery and OpenReview helpers
+  read-store/                          # output directory preference
+  read-language/                       # explanation language preference
+tests/                                 # persistence, annotations and host installation checks
 ```
 
-**Requirements:**
-- [Claude Code](https://claude.com/claude-code) (CLI / desktop / IDE extension).
-- `curl` for fetching arXiv/GitHub (preinstalled on macOS/Linux; bundled with Git for Windows).
-- Python 3.8+ with `openreview-py` (for `/read-search` on OpenReview venues — ICLR/NeurIPS/ICML). Install: `pip install openreview-py` (in China: `-i https://pypi.tuna.tsinghua.edu.cn/simple`). On first use of an OpenReview venue, you'll be prompted for your openreview.net credentials (free to register); they're stored locally at `~/.claude/openreview_credentials.json`.
-- Internet access to `arxiv.org` / `github.com` / `openreview.net`.
+## Validation
 
-Then run:
-```
-/read https://arxiv.org/abs/2401.12345
-/read-search self-evolution like AlphaEvolve
-/read-search icml2026 stereo video generation
+```sh
+python -m unittest discover -s tests -v
+node --check skills/read-main/assets/dashboard.js
+node --check skills/read-main/assets/comments.js
 ```
 
-## How it works under the hood
-
-A few non-obvious design choices separate *"it ingested the PDF"* from *"it actually understood the paper"*:
-
-- **arXiv HTML over PDF.** A paper's PDF renders math as glyphs; extracting text from it mangles subscripts, matrices, and Greek letters — which would destroy Layer 3. The skill prefers `arxiv.org/html/<id>` (and the `ar5iv` mirror), where equations are MathML and round-trip to clean LaTeX. PDF is the fallback, and the source of truth for figures.
-- **Focused reading, not full-text ingestion.** A 30-page paper shoved wholesale into context is expensive and dilutes focus. The skill reads abstract + intro to frame the problem, jumps straight to the method section for Layer 3, then skims results — skipping the parts that don't serve understanding.
-- **GitHub → paper resolution.** Given a repo, it reads the README, extracts the arXiv badge/link, and follows it to the paper. If the repo carries no paper link, it falls back to reading the code directly (clearly flagged as such).
-- **Fetch, don't clone.** For open-sourced papers it pulls only the 1–3 core source files the README points at (model, training entry point, loss) — not the whole repo (which often carries multi-GB checkpoints). Pseudocode, not raw source, is what gets explained.
-- **Honesty callouts.** Anything the paper leaves unclear, anywhere the code diverges from the formulas, and anything the skill infers rather than reads is flagged in a red callout — never silently passed off as certain.
-
-## Project structure
-
-```
-paper-reading-skills/
-├── README.md
-├── README.zh-CN.md            # 中文版 README
-├── LICENSE
-├── install.sh                 # copies the skills into ~/.claude/skills/
-└── skills/
-    ├── read/                  # the main reading skill
-    │   ├── SKILL.md
-    │   └── assets/paper_template.html
-    ├── read-store/            # set the note-library path
-    │   └── SKILL.md
-    ├── read-language/         # switch explanation language
-    │   └── SKILL.md
-    └── read-search/           # discover papers on a topic
-        ├── SKILL.md
-        ├── openreview_fetch.py    # login + fetch OpenReview accepted lists
-        └── save_credentials.py    # store OpenReview credentials locally
-```
-
-## Customizing the HTML
-
-The note template lives at `skills/read/assets/paper_template.html`. It's a single self-contained file with all CSS and the MathJax config inline — swap the color palette, fonts, or callout styles there and every future note picks it up. Two placeholders are replaced at render time: `{{TITLE}}` (the `<h1>` and `<title>`) and `{{CONTENT}}` (the rendered explanation body).
-
-## License
-
-[MIT](./LICENSE) — read papers, keep notes, fork freely.
+The HTML interactions have been manually checked in the Codex in-app browser. Automated tests cover shared helpers and both installation targets; this does not substitute for an end-to-end model run in every Claude Code or Codex version.

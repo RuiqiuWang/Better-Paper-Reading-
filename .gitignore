@@ -3,3 +3,12 @@
 __pycache__/
 Thumbs.db
 *.swp
+
+# Local configuration, generated files, and credentials
+.env
+.env.*
+openreview_credentials.json
+paper_reading_config.json
+host.json
+.reading-history/
+paper-reading-backups/

@@ -30,6 +30,17 @@ window.MathJax = {
   .warn .label { font-weight:700; color:#c0392b; }
   .ok { background:#f0f7f2; border:1px solid #bfe3cd; border-left:5px solid #1a7f45; border-radius:8px; padding:14px 20px; margin:20px 0; }
   .ok .label { font-weight:700; color:#1a7f45; }
+  .technical { background:#f4f6fa; border:1px solid #dce2eb; border-radius:10px; padding:16px 20px; margin:18px 0; }
+  .formal { border-left:3px solid #74869c; padding:2px 0 2px 20px; margin:24px 0; }
+  .takeaway { background:#f1f6f2; border:1px solid #d5e4d8; border-radius:10px; padding:16px 20px; margin:20px 0; }
+  .technical .label, .formal .label, .takeaway .label { font-weight:650; }
+  .source { color:var(--muted); font-size:13px; line-height:1.7; margin:10px 0; }
+  .source a { color:#506b86; text-underline-offset:3px; }
+  .proof-note { color:#666; font-size:14px; font-style:italic; }
+  figure { margin:24px 0; }
+  figure img { max-width:100%; height:auto; }
+  figcaption { color:var(--muted); font-size:13px; line-height:1.7; margin-top:8px; }
+  mjx-container[display="true"] { overflow-x:auto; overflow-y:hidden; max-width:100%; }
   code { background:#eef1f4; padding:1px 6px; border-radius:4px; font-size:90%; }
   table { border-collapse: collapse; margin: 14px 0; font-size:14.5px; width:100%; }
   th, td { border: 1px solid var(--border); padding: 7px 11px; text-align:left; vertical-align:top; }
@@ -45,12 +56,16 @@ window.MathJax = {
   pre.code .cm { color:#7f8a9e; font-style:italic; }
   pre.code .kw { color:#7cc3f5; }
   pre.code .st { color:#9ad07a; }
+  @media (max-width:600px) { body { padding:24px 18px 70px; } h1 { font-size:23px; } h2 { font-size:19px; } .formal { padding-left:13px; } }
 </style>
 </head>
 <body>
 
 <h1>{{TITLE}}</h1>
 
+<!-- Arrange sections around the paper's ideas. Overview: technical then intuitive.
+     Important parts: motivation, source-grounded reasoning, intuitive interpretation as useful.
+     Simple parts may combine these; omit irrelevant formulas, proofs or code. -->
 {{CONTENT}}
 
 </body>
