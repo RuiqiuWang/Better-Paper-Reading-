@@ -126,7 +126,9 @@ class LibraryTests(unittest.TestCase):
         argv = ["build_dashboard.py", str(self.store), "--no-discover", "--session", "current-session", "--open"]
         with mock.patch.object(sys, "argv", argv), mock.patch.object(builder.webbrowser, "open", side_effect=open_browser), redirect_stdout(io.StringIO()):
             builder.main()
-        self.assertEqual(observed, [(self.store / "index.html").as_uri() + "#session=current-session"])
+        # Windows runners may expose TEMP through an 8.3 alias (RUNNER~1).
+        # Compare the resolved path, as the dashboard builder does.
+        self.assertEqual(observed, [(self.store.resolve() / "index.html").as_uri() + "#session=current-session"])
 
     def test_http_delivery_prints_both_encoded_links(self):
         self.note("folder/paper name.html")
