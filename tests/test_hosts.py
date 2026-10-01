@@ -51,6 +51,57 @@ class HostTests(unittest.TestCase):
         self.assertFalse((legacy.parent / 'read-main').exists())
         self.assertFalse((self.home / '.agents').exists())
 
+    def test_research_only_preserves_reading_and_configuration(self):
+        folder = self.home / '.codex' / 'skills'
+        (folder / 'read-main').mkdir(parents=True)
+        (folder / 'read-main' / 'SKILL.md').write_text('personal reading skill')
+        host_file = folder / 'read-main' / 'host.json'
+        host_file.write_text('{"host":"codex","custom":true}')
+        config = self.home / '.codex' / 'paper_reading_config.json'
+        config.write_text('{"store_dir":"personal-notes"}')
+        targets = installer.install('codex', home=self.home, profile='research')
+        self.assertEqual(targets[0][1], folder)
+        self.assertEqual(host_file.read_text(), '{"host":"codex","custom":true}')
+        self.assertEqual((folder / 'read-main' / 'SKILL.md').read_text(), 'personal reading skill')
+        self.assertEqual(config.read_text(), '{"store_dir":"personal-notes"}')
+        self.assertTrue((folder / 'research-manage' / 'references' / 'documents.md').exists())
+        helper = folder / 'research-manage' / 'scripts' / 'local_git.py'
+        result = subprocess.run([sys.executable, str(helper), '--help'], capture_output=True, text=True, check=True)
+        self.assertIn('checkpoint', result.stdout)
+        self.assertFalse((folder / 'read').exists())
+
+    def test_research_clean_install_both_and_upgrade_backup(self):
+        targets = installer.install('both', home=self.home, profile='research')
+        for _, folder in targets:
+            self.assertTrue((folder / 'research-manage' / 'SKILL.md').exists())
+            for source in (ROOT / 'skills' / 'research-evaluate').rglob('*'):
+                if source.is_file():
+                    installed = folder / 'research-evaluate' / source.relative_to(ROOT / 'skills' / 'research-evaluate')
+                    self.assertEqual(installed.read_bytes(), source.read_bytes())
+            self.assertFalse((folder / 'read-main').exists())
+        codex = targets[0][1]
+        (codex / 'research-manage' / 'SKILL.md').write_text('custom research instructions')
+        installer.install('codex', home=self.home, profile='research')
+        backups = list((codex.parent / 'paper-reading-backups').glob('*/research-manage/SKILL.md'))
+        self.assertTrue(any(p.read_text() == 'custom research instructions' for p in backups))
+
+    def test_all_profile_and_research_dry_run(self):
+        installer.install('both', home=self.home, profile='research', dry_run=True)
+        self.assertFalse((self.home / '.agents').exists())
+        self.assertFalse((self.home / '.claude').exists())
+        targets = installer.install('both', home=self.home, profile='all')
+        for host, folder in targets:
+            self.assertTrue((folder / 'research-manage' / 'SKILL.md').exists())
+            self.assertEqual(json.loads((folder / 'read-main' / 'host.json').read_text())['host'], host)
+
+    def test_profiles_do_not_split_existing_install_and_reject_unknown(self):
+        installer.install('codex', home=self.home, profile='research')
+        targets = installer.install('codex', home=self.home)
+        self.assertEqual(targets[0][1], self.home / '.agents' / 'skills')
+        self.assertFalse((self.home / '.codex' / 'skills').exists())
+        with self.assertRaises(ValueError):
+            installer.install('codex', home=self.home, profile='typo')
+
     def test_preferences_are_isolated_and_preserved(self):
         old = self.home / 'old-notes'
         path, data = host_config.update('codex', store=str(old), language='english')
@@ -63,6 +114,19 @@ class HostTests(unittest.TestCase):
         self.assertEqual(moved['custom'], {'keep': True})
         self.assertTrue(old.is_dir())
         self.assertEqual(host_config.load('claude')[1], {})
+
+    def test_catalog_rejects_path_escape_and_duplicate_entries(self):
+        catalog = self.home / 'catalog.json'
+        for bad in ({'reading': ['../read'], 'research': ['research-manage']},
+                    {'reading': ['read'], 'research': ['read']},
+                    {'reading': [], 'research': ['research-manage']}):
+            catalog.write_text(json.dumps(bad), encoding='utf-8')
+            with self.assertRaises(ValueError):
+                installer.load_catalog(catalog)
+
+    def test_catalog_includes_every_bundled_skill(self):
+        bundled = {p.parent.name for p in (ROOT / 'skills').glob('*/SKILL.md')}
+        self.assertEqual(set(installer.PROFILES['all']), bundled)
 
     def test_malformed_config_is_not_reset(self):
         path = host_config.config_root('codex') / 'paper_reading_config.json'
