@@ -2,6 +2,9 @@
 
 ## 2026-10-01
 
+- Add `research-evaluate`: research relevant papers and official evaluation code, then define sourced metrics, curves, tables, logs and versioned fixed-sample protocols for each topic.
+- Include stereo-video and depth-estimation guidance, raw result retention, timing/resource records and checkpoint/continuation rules. This release adds agent instructions and templates, not a running training logger.
+- Include both research skills in the research/all install profiles; preserve reading defaults and document the adopted evaluation workflow.
 - Reframe the project as Better Research, with a short entrypoint, preserved paper-reading guides, a research guide and a validated skill catalog.
 - Add local-only Git initialization/status/checkpoints to `research-manage`; select explicit files, preserve unrelated staged work, and perform no remote operations.
 - Record the curve/fixed-video discussion as a proposal, not implemented experiment behavior.

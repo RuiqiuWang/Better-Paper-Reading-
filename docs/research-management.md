@@ -1,6 +1,6 @@
 # 科研管理 / Research management
 
-已实现技能：`research-manage`。面向代码和文档的本地管理；不是服务器后台运维平台。
+已实现技能：`research-manage` 负责本地管理；`research-evaluate` 负责从相关论文确定评测与记录方案。两者是 agent 技能，不是服务器后台运维平台。
 
 ```sh
 python install.py --target codex --profile research
@@ -12,9 +12,10 @@ python install.py --target codex --profile research
 ```text
 $research-manage 为课题建立目录导航和方法说明，并初始化本地 Git。
 $research-manage 根据这次实验的指标文件更新具体结果、失败记录及本地提交。
+$research-evaluate 为新topic核验相关论文，制定有来源的评测和实验保存方案。
 ```
 
-Claude Code 使用 `/research-manage`。
+Claude Code 使用 `/research-manage`、`/research-evaluate`。评测工作流见[评测指南](experiment-logging-proposal.md)。
 
 - 代码 `/home/<account>/code/<topic>`；环境 `/data/<account>/envs`。
 - 课题 README 指路，方法卡解释代码/环境/资产，CHANGELOG 记录原因。

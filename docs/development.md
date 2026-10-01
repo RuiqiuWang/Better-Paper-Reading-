@@ -9,6 +9,7 @@ skill_catalog.json       # installable families
 install.py / .ps1 / .sh   # shared profile-based installer
 skills/read*/            # existing paper-reading workflows
 skills/research-manage/  # documentation, experiment records, local Git helper
+skills/research-evaluate/ # paper evidence, evaluation contracts and task profiles
 docs/                    # user guides and focused design notes
 tests/                   # reading, installation and Git behavior
 ```

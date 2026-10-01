@@ -13,6 +13,7 @@
 | 论文阅读 | `read`、`read-main`、`read-search` | 精读、工作台、论文发现 |
 | 阅读追问与偏好 | `read-rewrite`、`read-comment`、`read-store`、`read-language` | 原文改写、编号批注、存储位置和语言 |
 | 科研管理 | `research-manage` | 课题路径、方法卡、变更历史、具体实验结果和本地 Git |
+| 评测设计 | `research-evaluate` | 为新课题调研论文依据，确定指标、曲线、表格、日志与固定样本 |
 
 阅读使用 `read-*`，科研使用 `research-<动作>`。目录、环境与结果如何管理，见[科研管理指南](docs/research-management.md)；完整阅读流程见[阅读指南](docs/reading.zh-CN.md)。
 
@@ -27,7 +28,7 @@ python install.py --target codex --profile all
 ```
 
 - `--profile reading`：原七个阅读技能，也是省略该参数时的默认值。
-- `--profile research`：只安装科研管理，保留现有阅读技能与配置。
+- `--profile research`：安装科研管理与评测设计，保留现有阅读技能与配置。
 - `--profile all`：同时安装；`--target both` 支持两个宿主。
 - `--dry-run`：预览安装；已有技能会备份，笔记与个人配置保留。
 
@@ -46,6 +47,7 @@ bash install.sh --target both --profile all
 ```text
 $read <论文链接>
 $research-manage 为课题整理目录、方法说明和实验结果，维护本地 Git。
+$research-evaluate 为这个新课题查找相关论文，确定评测指标、曲线、表格、日志与固定样本。
 ```
 
 Claude Code 使用 `/read`、`/research-manage`。科研管理默认代码放 `/home`、环境放 `/data`；阶段完成后只提交相关代码与小型文档。**只有用户明确要求时才推送到远端。** 大数据、权重、视频和环境不进入普通 Git。
@@ -56,9 +58,10 @@ Claude Code 使用 `/read`、`/research-manage`。科研管理默认代码放 `/
 skill_catalog.json       # 阅读/科研技能清单，安装器读取
 skills/read*/            # 论文阅读与追问
 skills/research-manage/  # 管理指令、文档模板和本地 Git 脚本
+skills/research-evaluate/ # 论文驱动的评测流程、协议模板和任务参考
 docs/                    # 使用指南、开发说明、待讨论方案
 tests/                   # 阅读、安装与 Git 行为验证
 install.py/.ps1/.sh      # 统一安装入口
 ```
 
-开发和验证见[开发说明](docs/development.md)。PSNR/SSIM/loss 曲线及固定视频集目前只是[待讨论方案](docs/experiment-logging-proposal.md)，尚未实现。此仓库不自动启动训练、服务器迁移或后台监控。
+开发和验证见[开发说明](docs/development.md)。曲线与固定样本规则已纳入[评测技能指南](docs/experiment-logging-proposal.md)。当前实现是 agent 工作流和协议模板；实际训练器的日志、评分与绘图接入需要针对课题执行。此仓库不自动启动训练、服务器迁移或后台监控。
