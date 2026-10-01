@@ -2,10 +2,11 @@ param(
     [ValidateSet('codex', 'claude', 'both')][string]$Target = 'both',
     [string]$SkillsDir,
     [string]$Python,
+    [ValidateSet('reading', 'research', 'all')][string]$Profile = 'reading',
     [switch]$DryRun
 )
 $ErrorActionPreference = 'Stop'
-$installArgs = @((Join-Path $PSScriptRoot 'install.py'), '--target', $Target)
+$installArgs = @((Join-Path $PSScriptRoot 'install.py'), '--target', $Target, '--profile', $Profile)
 if ($SkillsDir) { $installArgs += @('--skills-dir', $SkillsDir) }
 if ($DryRun) { $installArgs += '--dry-run' }
 if ($Python) { & $Python @installArgs }
