@@ -53,6 +53,6 @@ python install.py --target codex --profile all
 
 有未提交改动或分叉时先检查并处理，不使用reset/clean覆盖工作。查看[更新记录](../CHANGELOG.md)，再选需要的安装组合；仓库更新本身不会自动更新个人技能目录。
 
-Better Paper Reading升级到Better Research无需迁移阅读库。`read-*`命令、阅读配置文件和备份目录保持兼容；research组合增加两个科研技能。新clone目录为Better-Research，旧checkout文件夹无需改名。
+Better Paper Reading升级到Better Research无需迁移阅读库。`read-*`命令、阅读配置文件和备份目录保持兼容；research组合包含管理、评测、性能优化三个科研技能。新clone目录为Better-Research，旧checkout文件夹无需改名。
 
 如需撤回某次技能升级，可从对应备份恢复所需技能；先保留升级后的个人修改。备份不包含此次新安装、此前不存在的技能；不要将整个技能目录一并覆盖。

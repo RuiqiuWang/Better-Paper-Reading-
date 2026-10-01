@@ -74,10 +74,11 @@ class HostTests(unittest.TestCase):
         targets = installer.install('both', home=self.home, profile='research')
         for _, folder in targets:
             self.assertTrue((folder / 'research-manage' / 'SKILL.md').exists())
-            for source in (ROOT / 'skills' / 'research-evaluate').rglob('*'):
-                if source.is_file():
-                    installed = folder / 'research-evaluate' / source.relative_to(ROOT / 'skills' / 'research-evaluate')
-                    self.assertEqual(installed.read_bytes(), source.read_bytes())
+            for name in installer.RESEARCH_SKILLS:
+                for source in (ROOT / 'skills' / name).rglob('*'):
+                    if source.is_file() and source.suffix != '.pyc' and '__pycache__' not in source.parts:
+                        installed = folder / name / source.relative_to(ROOT / 'skills' / name)
+                        self.assertEqual(installed.read_bytes(), source.read_bytes())
             self.assertFalse((folder / 'read-main').exists())
         codex = targets[0][1]
         (codex / 'research-manage' / 'SKILL.md').write_text('custom research instructions')

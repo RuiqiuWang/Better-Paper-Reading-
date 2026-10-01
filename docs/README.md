@@ -9,6 +9,7 @@
 | 找论文、精读、追问和工作台 | [中文阅读指南](reading.zh-CN.md) / [English reading guide](reading.md) |
 | 管理文件、方法卡、本地 Git 与实验结果 | [科研管理](research-management.md) |
 | 依据论文确定指标、曲线与记录内容 | [评测设计](evaluation.md) |
+| 大规模实验前优化、新领域/视频/两阶段2Dto3D加速 | [性能优化](optimization.md) |
 | 修改代码或技能 | [贡献指南](../CONTRIBUTING.md) / [开发说明](development.md) |
 | 了解当前范围与下一步 | [路线图](roadmap.md) / [更新记录](../CHANGELOG.md) |
 

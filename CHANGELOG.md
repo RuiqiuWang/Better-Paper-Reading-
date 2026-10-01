@@ -1,5 +1,11 @@
 # Changelog
 
+## 2026-10-02
+
+- Add `research-optimize`: bounded performance diagnosis before large training/inference runs, with reusable configurations, correctness checks and fallback decisions.
+- Organize guidance into cross-domain workflow, general video pipelines, and two-stage 2Dto3D. Include a sanitized measured case summary; distinguish verified short-window inference from untested training/long-video candidates.
+- Register the third research skill in research/all installation, route evaluation and project records to performance preparation, and update bilingual entrypoints and documentation. No production model or server changes are included.
+
 ## 2026-10-01
 
 - Rename the GitHub repository to `RuiqiuWang/Better-Research`; update clone URLs and document remote migration for existing checkouts. Preserve repository history and reading configuration compatibility.

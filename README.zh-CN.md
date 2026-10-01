@@ -4,7 +4,7 @@
 
 [English](README.md) · [文档导航](docs/README.md) · [参与维护](CONTRIBUTING.md) · [更新记录](CHANGELOG.md)
 
-Better Research 将论文阅读、课题管理和评测设计整合为一套面向 **Codex 与 Claude Code** 的技能。项目由 Better Paper Reading 演进而来，保留原有阅读命令、HTML 笔记库和个人配置，后续科研能力在这个仓库持续维护。
+Better Research 将论文阅读、课题管理、评测设计和性能优化整合为一套面向 **Codex 与 Claude Code** 的技能。项目由 Better Paper Reading 演进而来，保留原有阅读命令、HTML 笔记库和个人配置，后续科研能力在这个仓库持续维护。
 
 ## 一条完整的科研工作流
 
@@ -14,10 +14,11 @@ Better Research 将论文阅读、课题管理和评测设计整合为一套面�
 | 整理知识与追问 | `read-main`、`read-comment`、`read-rewrite` | 阅读工作台、原文批注与解释改写 |
 | 管理课题 | `research-manage` | 路径导航、方法卡、实验记录与本地 Git 历史 |
 | 确定评测方案 | `research-evaluate` | 论文依据、指标口径、固定样本及曲线/表格/日志方案 |
+| 正式实验前优化 | `research-optimize` | 小预算瓶颈诊断、正确性验证、通用视频及两阶段2Dto3D方案 |
 
-另有 `read-store`、`read-language` 设置笔记位置与解释语言。当前共 **9 个技能**，统一登记在 [skill_catalog.json](skill_catalog.json)。
+另有 `read-store`、`read-language` 设置笔记位置与解释语言。当前共 **10 个技能**，统一登记在 [skill_catalog.json](skill_catalog.json)。
 
-阅读工作台与本地 Git 管理已有可执行工具。评测技能目前提供 agent 工作流、协议模板和任务参考；真实训练器的日志、评分与绘图需在具体课题内接入。安装技能不会自行启动训练或后台监控。
+阅读工作台与本地 Git 管理已有可执行工具。评测和性能优化技能提供 agent 工作流、协议模板和任务参考；真实训练器的日志、评分与绘图需在具体课题内接入。安装技能不会自行启动训练或后台监控。
 
 ## 快速开始
 
@@ -37,7 +38,7 @@ Claude Code 使用 `--target claude`，两个宿主一起安装用 `--target bot
 |---|---|
 | `all` | 阅读与科研全部技能，新用户推荐 |
 | `reading` | 七个阅读技能；为兼容旧用户，仍是命令行默认值 |
-| `research` | 科研管理与评测设计，保留已有阅读设置 |
+| `research` | 科研管理、评测设计与性能优化，保留已有阅读设置 |
 
 已有技能更新前会备份。安装位置、PowerShell/Bash 入口和升级步骤见[安装指南](docs/installation.md)。
 
@@ -48,6 +49,7 @@ $read-search 单目转双目视频生成
 $read <论文链接>
 $research-manage 为这个课题建立目录导航、方法卡和本地 Git。
 $research-evaluate 调研相关论文，确定该课题的指标、固定样本、曲线、表格和日志。
+$research-optimize 正式大规模实验前，用小预算诊断瓶颈并验证高效配置。
 ```
 
 Claude Code 将 `$` 换成 `/`。从课题建立到实验结果维护，见[课题工作流](docs/workflow.md)。
@@ -71,7 +73,8 @@ Claude Code 将 `$` 换成 `/`。从课题建立到实验结果维护，见[课�
 
 ## 文档与后续维护
 
-- [文档导航](docs/README.md)：阅读、管理、评测与安装入口。
+- [文档导航](docs/README.md)：阅读、管理、评测、性能优化与安装入口。
+- [性能优化](docs/optimization.md)：跨领域流程 → 通用视频 → 两阶段2Dto3D，按需读取对应层次。
 - [参与维护](CONTRIBUTING.md)：小步修改、验证和评审约定。
 - [开发说明](docs/development.md)：项目结构与验证命令。
 - [路线图](docs/roadmap.md)：已完成能力与后续方向。

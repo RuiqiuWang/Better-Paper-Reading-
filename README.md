@@ -1,10 +1,10 @@
 # Better Research
 
-**A research workspace for AI agents — from understanding papers to organizing projects and designing reproducible evaluation.**
+**A research workspace for AI agents — from understanding papers to organizing projects, designing reproducible evaluation and preparing efficient experiments.**
 
 [简体中文](README.zh-CN.md) · [Documentation](docs/README.md) · [Contributing](CONTRIBUTING.md) · [Changelog](CHANGELOG.md)
 
-Better Research brings paper reading, research project management and evidence-based evaluation into one skill collection for **Codex and Claude Code**. It evolved from Better Paper Reading and preserves its reading commands, HTML library and personal configuration.
+Better Research brings paper reading, research project management, evidence-based evaluation and performance preparation into one skill collection for **Codex and Claude Code**. It evolved from Better Paper Reading and preserves its reading commands, HTML library and personal configuration.
 
 ## Research workflow
 
@@ -14,10 +14,11 @@ Better Research brings paper reading, research project management and evidence-b
 | Organize knowledge | `read-main`, `read-comment`, `read-rewrite` | A reading workspace, inline discussions and revised explanations |
 | Manage a topic | `research-manage` | File navigation, method cards, experiment evidence and local Git history |
 | Define evaluation | `research-evaluate` | Paper evidence, metric definitions, fixed samples, curves, tables and logging protocols |
+| Prepare efficient experiments | `research-optimize` | Small-budget diagnosis, correctness checks, video pipelines and a two-stage 2Dto3D recipe |
 
-`read-store` and `read-language` configure the reading library and explanation language. All **nine skills** are registered in [skill_catalog.json](skill_catalog.json).
+`read-store` and `read-language` configure the reading library and explanation language. All **ten skills** are registered in [skill_catalog.json](skill_catalog.json).
 
-The reading workspace and local Git helper include executable tools. Evaluation design is an agent workflow with templates and task references; logging, scoring and plotting must be integrated with each topic's actual training or inference code. The skills do not start training or background monitoring on installation.
+The reading workspace and local Git helper include executable tools. Evaluation and optimization are agent workflows with templates and task references; logging, scoring and plotting must be integrated with each topic's actual training or inference code. The skills do not start training or background monitoring on installation.
 
 ## Quick start
 
@@ -37,7 +38,7 @@ Use `--target claude` or `--target both` for Claude Code. On systems where Pytho
 |---|---|
 | `all` | Reading and research; recommended for a new Better Research installation |
 | `reading` | Seven reading skills; retained as the CLI default for compatibility |
-| `research` | Project management and evaluation design; leaves reading settings intact |
+| `research` | Project management, evaluation and performance optimization; leaves reading settings intact |
 
 Existing skills are backed up before updates. See [installation and upgrades](docs/installation.md) for locations, shell wrappers and dry runs.
 
@@ -48,6 +49,7 @@ $read-search monocular-to-stereo video generation
 $read <paper-url>
 $research-manage Set up this topic's file navigation, method cards and local Git history.
 $research-evaluate Review relevant papers and define this topic's metrics, fixed samples, curves, tables and logs.
+$research-optimize Before the full run, diagnose bottlenecks with a small budget and validate an efficient configuration.
 ```
 
 Claude Code uses the same names with `/` instead of `$`. Follow the [topic workflow](docs/workflow.md) to connect these steps and record experiment results.
@@ -71,7 +73,8 @@ Small code and documentation changes are committed locally. **Remote pushes requ
 
 ## Documentation and maintenance
 
-- [Documentation index](docs/README.md): reading, research management, evaluation and installation.
+- [Documentation index](docs/README.md): reading, research management, evaluation, optimization and installation.
+- [Optimization guide](docs/optimization.md): cross-domain workflow → general video pipelines → two-stage 2Dto3D; load only the relevant references.
 - [Contributing](CONTRIBUTING.md): small changes, validation and review.
 - [Development](docs/development.md): repository structure and verification commands.
 - [Roadmap](docs/roadmap.md): current capabilities and future work.

@@ -1,4 +1,4 @@
 {
   "reading": ["read", "read-main", "read-search", "read-store", "read-language", "read-rewrite", "read-comment"],
-  "research": ["research-manage", "research-evaluate"]
+  "research": ["research-manage", "research-evaluate", "research-optimize"]
 }

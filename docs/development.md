@@ -1,6 +1,6 @@
 # Development
 
-Better Research contains two installable families. `read-*` keeps paper discovery, explanations and follow-ups compatible; `research-*` contains project management and paper-grounded evaluation design. Start with the [contribution guide](../CONTRIBUTING.md); `main` is the shared integration branch.
+Better Research contains two installable families. `read-*` keeps paper discovery, explanations and follow-ups compatible; `research-*` contains project management, paper-grounded evaluation and bounded performance optimization. Start with the [contribution guide](../CONTRIBUTING.md); `main` is the shared integration branch.
 
 `skill_catalog.json` is the installer source of truth. Add a real skill there only after its entrypoint and resources are ready. Skills remain direct children of `skills/` so their existing imports, asset paths and installation names remain stable.
 
@@ -10,6 +10,7 @@ install.py / .ps1 / .sh   # shared profile-based installer
 skills/read*/            # existing paper-reading workflows
 skills/research-manage/  # documentation, experiment records, local Git helper
 skills/research-evaluate/ # paper evidence, evaluation contracts and task profiles
+skills/research-optimize/ # bounded profiling, general video and task-specific recipes
 docs/                    # installation, topic workflow and module guides
 tests/                   # reading, installation and Git behavior
 .github/workflows/       # validation on Linux and Windows
