@@ -8,6 +8,7 @@ Better Research contains two installable families. `read-*` keeps paper discover
 skill_catalog.json       # installable families
 install.py / .ps1 / .sh   # shared profile-based installer
 skills/read*/            # existing paper-reading workflows
+skills/research-workflow/ # automatic scenario routing and stage coordination
 skills/research-manage/  # documentation, experiment records, local Git helper
 skills/research-evaluate/ # paper evidence, evaluation contracts and task profiles
 skills/research-optimize/ # bounded profiling, general video and task-specific recipes

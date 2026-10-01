@@ -5,6 +5,7 @@
 | 需求 | 文档 |
 |---|---|
 | 安装、更新和旧版本兼容 | [安装指南](installation.md) |
+| 自然语言自动调用与阶段衔接 | [自动流程](automatic-workflow.md) / [触发表](../skills/research-workflow/references/triggers.md) |
 | 从新课题走到实验记录 | [课题工作流](workflow.md) |
 | 找论文、精读、追问和工作台 | [中文阅读指南](reading.zh-CN.md) / [English reading guide](reading.md) |
 | 管理文件、方法卡、本地 Git 与实验结果 | [科研管理](research-management.md) |

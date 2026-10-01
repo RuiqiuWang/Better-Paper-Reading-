@@ -2,6 +2,9 @@
 
 ## 2026-10-02
 
+- Add implicitly selected `research-workflow` with one maintained scenario trigger table: prepare/evaluate, reuse or benchmark, validate, continue the authorized full run, and record results. Preserve planning-only, benchmarking-only and recovery boundaries.
+- Make natural-language research requests the default documented entrypoint and include all four research skills in research/all profiles.
+
 - Add `research-optimize`: bounded performance diagnosis before large training/inference runs, with reusable configurations, correctness checks and fallback decisions.
 - Organize guidance into cross-domain workflow, general video pipelines, and two-stage 2Dto3D. Include a sanitized measured case summary; distinguish verified short-window inference from untested training/long-video candidates.
 - Register the third research skill in research/all installation, route evaluation and project records to performance preparation, and update bilingual entrypoints and documentation. No production model or server changes are included.

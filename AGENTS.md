@@ -8,4 +8,5 @@
 - Keep credentials, environments, large data, model weights and generated media out of this source repository.
 - Use `docs/development.md` for the verification commands.
 - Treat `main` as the integration branch; use focused `codex/<topic>` branches for new work. Merge/push only within the user's authorization; preserve shared history.
+- Maintain scenario routing in `skills/research-workflow/references/triggers.md`; keep its discovery description and installation aligned. Editing this skills repository does not authorize real research experiments.
 - Keep the project entrypoints and `docs/README.md` aligned. Protocol instructions live in skills; real topic assets and experimental data belong in their own projects.

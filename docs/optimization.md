@@ -3,12 +3,12 @@
 `research-optimize` 是正式训练或批量推理前的小预算优化入口，包含通用视频和两阶段2Dto3D参考。它指导agent检查真实工程、适配计时与修改并验证，不是安装后自动启动的benchmark或训练调度器。
 
 ```text
-$research-optimize 在正式大规模实验前，检查当前领域的瓶颈，用小预算比较方案并保存可靠配置。
-$research-optimize 优化这个视频训练的数据供给，同时保持有效batch、增强和评测协议。
-$research-optimize 按两阶段2Dto3D方案，检查深度、warp、生成和输出的完整推理管线。
+准备正式大规模实验，先检查瓶颈，用小预算比较方案并保存可靠配置。
+优化这个视频训练的数据供给，同时保持有效batch、增强和评测协议。
+按两阶段2Dto3D方案，检查深度、warp、生成和输出的完整推理管线。
 ```
 
-Claude Code使用 `/research-optimize`；安装profile选 `research` 或 `all`。
+这些自然语言请求由[自动流程](automatic-workflow.md)衔接，用户无需手动调用。也保留 `$research-optimize`（Claude Code为 `/research-optimize`）作为可选入口；安装profile选 `research` 或 `all`。
 
 ## 分类与发现
 

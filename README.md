@@ -12,11 +12,12 @@ Better Research brings paper reading, research project management, evidence-base
 |---|---|---|
 | Discover and understand | `read-search`, `read` | Relevant papers, source-grounded explanations and HTML notes |
 | Organize knowledge | `read-main`, `read-comment`, `read-rewrite` | A reading workspace, inline discussions and revised explanations |
+| Coordinate automatically | `research-workflow` | Match natural-language requests to the shared trigger table and continue through the required stages |
 | Manage a topic | `research-manage` | File navigation, method cards, experiment evidence and local Git history |
 | Define evaluation | `research-evaluate` | Paper evidence, metric definitions, fixed samples, curves, tables and logging protocols |
 | Prepare efficient experiments | `research-optimize` | Small-budget diagnosis, correctness checks, video pipelines and a two-stage 2Dto3D recipe |
 
-`read-store` and `read-language` configure the reading library and explanation language. All **ten skills** are registered in [skill_catalog.json](skill_catalog.json).
+`read-store` and `read-language` configure the reading library and explanation language. All **eleven skills** are registered in [skill_catalog.json](skill_catalog.json).
 
 The reading workspace and local Git helper include executable tools. Evaluation and optimization are agent workflows with templates and task references; logging, scoring and plotting must be integrated with each topic's actual training or inference code. The skills do not start training or background monitoring on installation.
 
@@ -38,21 +39,21 @@ Use `--target claude` or `--target both` for Claude Code. On systems where Pytho
 |---|---|
 | `all` | Reading and research; recommended for a new Better Research installation |
 | `reading` | Seven reading skills; retained as the CLI default for compatibility |
-| `research` | Project management, evaluation and performance optimization; leaves reading settings intact |
+| `research` | Automatic workflow, project management, evaluation and optimization; leaves reading settings intact |
 
 Existing skills are backed up before updates. See [installation and upgrades](docs/installation.md) for locations, shell wrappers and dry runs.
 
-Then enter requests **in the agent conversation**:
+Describe the research goal **in the agent conversation**. Skill commands are optional; [automatic routing](docs/automatic-workflow.md) selects and connects the required stages:
 
 ```text
 $read-search monocular-to-stereo video generation
 $read <paper-url>
-$research-manage Set up this topic's file navigation, method cards and local Git history.
-$research-evaluate Review relevant papers and define this topic's metrics, fixed samples, curves, tables and logs.
-$research-optimize Before the full run, diagnose bottlenecks with a small budget and validate an efficient configuration.
+Train and evaluate this new research topic on the allocated GPUs.
+Run inference over the full dataset, reusing an applicable validated configuration.
+Plan this topic first; do not start experiments yet.
 ```
 
-Claude Code uses the same names with `/` instead of `$`. Follow the [topic workflow](docs/workflow.md) to connect these steps and record experiment results.
+Explicit skill commands remain available; Claude Code uses `/` instead of `$`. Follow the [topic workflow](docs/workflow.md) to connect these steps and record experiment results.
 
 ## Research records
 
@@ -74,6 +75,7 @@ Small code and documentation changes are committed locally. **Remote pushes requ
 ## Documentation and maintenance
 
 - [Documentation index](docs/README.md): reading, research management, evaluation, optimization and installation.
+- [Automatic trigger table](skills/research-workflow/references/triggers.md): scenarios, skill order and conditions for continuing into full runs.
 - [Optimization guide](docs/optimization.md): cross-domain workflow → general video pipelines → two-stage 2Dto3D; load only the relevant references.
 - [Contributing](CONTRIBUTING.md): small changes, validation and review.
 - [Development](docs/development.md): repository structure and verification commands.

@@ -12,11 +12,12 @@ Better Research 将论文阅读、课题管理、评测设计和性能优化整�
 |---|---|---|
 | 找论文、理解方法 | `read-search`、`read` | 相关论文、基于原文的解释和 HTML 笔记 |
 | 整理知识与追问 | `read-main`、`read-comment`、`read-rewrite` | 阅读工作台、原文批注与解释改写 |
+| 自动衔接流程 | `research-workflow` | 根据自然语言目标匹配触发表，完成所需阶段并继续执行 |
 | 管理课题 | `research-manage` | 路径导航、方法卡、实验记录与本地 Git 历史 |
 | 确定评测方案 | `research-evaluate` | 论文依据、指标口径、固定样本及曲线/表格/日志方案 |
 | 正式实验前优化 | `research-optimize` | 小预算瓶颈诊断、正确性验证、通用视频及两阶段2Dto3D方案 |
 
-另有 `read-store`、`read-language` 设置笔记位置与解释语言。当前共 **10 个技能**，统一登记在 [skill_catalog.json](skill_catalog.json)。
+另有 `read-store`、`read-language` 设置笔记位置与解释语言。当前共 **11 个技能**，统一登记在 [skill_catalog.json](skill_catalog.json)。
 
 阅读工作台与本地 Git 管理已有可执行工具。评测和性能优化技能提供 agent 工作流、协议模板和任务参考；真实训练器的日志、评分与绘图需在具体课题内接入。安装技能不会自行启动训练或后台监控。
 
@@ -38,21 +39,21 @@ Claude Code 使用 `--target claude`，两个宿主一起安装用 `--target bot
 |---|---|
 | `all` | 阅读与科研全部技能，新用户推荐 |
 | `reading` | 七个阅读技能；为兼容旧用户，仍是命令行默认值 |
-| `research` | 科研管理、评测设计与性能优化，保留已有阅读设置 |
+| `research` | 自动科研流程、管理、评测与性能优化，保留已有阅读设置 |
 
 已有技能更新前会备份。安装位置、PowerShell/Bash 入口和升级步骤见[安装指南](docs/installation.md)。
 
-安装后在 **agent 对话中**输入：
+安装后在 **agent 对话中直接描述目标**，无需手动输入技能名。[自动流程](docs/automatic-workflow.md)会选择并衔接所需阶段：
 
 ```text
 $read-search 单目转双目视频生成
 $read <论文链接>
-$research-manage 为这个课题建立目录导航、方法卡和本地 Git。
-$research-evaluate 调研相关论文，确定该课题的指标、固定样本、曲线、表格和日志。
-$research-optimize 正式大规模实验前，用小预算诊断瓶颈并验证高效配置。
+在指定GPU上完成这个新topic的大规模训练和评测。
+用这个模型推理整个数据集，有适用的性能配置就直接复用。
+先规划这个课题，暂时不要运行实验。
 ```
 
-Claude Code 将 `$` 换成 `/`。从课题建立到实验结果维护，见[课题工作流](docs/workflow.md)。
+仍可显式指定技能；Claude Code 将 `$` 换成 `/`。从课题建立到实验结果维护，见[课题工作流](docs/workflow.md)。
 
 ## 科研文件与实验记录
 
@@ -74,6 +75,7 @@ Claude Code 将 `$` 换成 `/`。从课题建立到实验结果维护，见[课�
 ## 文档与后续维护
 
 - [文档导航](docs/README.md)：阅读、管理、评测、性能优化与安装入口。
+- [自动触发表](skills/research-workflow/references/triggers.md)：遇到什么情况、调用哪些技能、何时继续正式实验。
 - [性能优化](docs/optimization.md)：跨领域流程 → 通用视频 → 两阶段2Dto3D，按需读取对应层次。
 - [参与维护](CONTRIBUTING.md)：小步修改、验证和评审约定。
 - [开发说明](docs/development.md)：项目结构与验证命令。
