@@ -18,8 +18,8 @@
 需要 **Python 3.8+**，以及能够访问本地文件、运行命令的 Codex 或 Claude Code 环境。工作台和追问脚本只用 Python 标准库；调用 OpenReview 搜索助手时才需要可选依赖 `openreview-py`。获取论文和 MathJax 等外部资源需要网络。
 
 ```sh
-git clone https://github.com/RuiqiuWang/Better-Paper-Reading-.git
-cd Better-Paper-Reading-
+git clone https://github.com/RuiqiuWang/Better-Research.git
+cd Better-Research
 python install.py --target both
 ```
 

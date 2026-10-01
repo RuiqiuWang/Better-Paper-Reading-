@@ -26,7 +26,7 @@ Better Research 将论文阅读、课题管理和评测设计整合为一套面�
 在终端运行：
 
 ```sh
-git clone https://github.com/RuiqiuWang/Better-Paper-Reading-.git Better-Research
+git clone https://github.com/RuiqiuWang/Better-Research.git Better-Research
 cd Better-Research
 python install.py --target codex --profile all
 ```
@@ -78,6 +78,6 @@ Claude Code 将 `$` 换成 `/`。从课题建立到实验结果维护，见[课�
 
 `main` 是统一集成分支。后续继续在本仓库维护，通常使用 `codex/<topic>` 分支完成一项具体改动。
 
-项目名称统一为 **Better Research**。GitHub 地址保留旧名称以兼容已有 clone 和链接；旧阅读配置名与备份目录继续保留，支持原位升级。
+GitHub 仓库名称已统一为 **RuiqiuWang/Better-Research**。已有 clone 可按[升级指南](docs/installation.md)更新 remote；旧阅读配置名与备份目录继续保留，支持原位升级。
 
 [MIT 许可证](LICENSE)。

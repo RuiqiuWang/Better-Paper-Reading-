@@ -37,6 +37,12 @@ bash install.sh --target both --profile all
 
 ## 升级与兼容
 
+GitHub仓库已从 `RuiqiuWang/Better-Paper-Reading-` 更名为 `RuiqiuWang/Better-Research`。从旧地址clone的用户，在确认origin指向本项目后更新：
+
+```sh
+git remote set-url origin https://github.com/RuiqiuWang/Better-Research.git
+```
+
 在工作区干净且本地main没有独立分叉时：
 
 ```sh
@@ -47,6 +53,6 @@ python install.py --target codex --profile all
 
 有未提交改动或分叉时先检查并处理，不使用reset/clean覆盖工作。查看[更新记录](../CHANGELOG.md)，再选需要的安装组合；仓库更新本身不会自动更新个人技能目录。
 
-Better Paper Reading升级到Better Research无需迁移阅读库。`read-*`命令、阅读配置文件、备份目录和现有URL保持兼容；research组合增加两个科研技能。新clone可命名为Better-Research，旧checkout文件夹无需改名。
+Better Paper Reading升级到Better Research无需迁移阅读库。`read-*`命令、阅读配置文件和备份目录保持兼容；research组合增加两个科研技能。新clone目录为Better-Research，旧checkout文件夹无需改名。
 
 如需撤回某次技能升级，可从对应备份恢复所需技能；先保留升级后的个人修改。备份不包含此次新安装、此前不存在的技能；不要将整个技能目录一并覆盖。

@@ -2,6 +2,7 @@
 
 ## 2026-10-01
 
+- Rename the GitHub repository to `RuiqiuWang/Better-Research`; update clone URLs and document remote migration for existing checkouts. Preserve repository history and reading configuration compatibility.
 - Consolidate Better Research as the maintained project: rewrite bilingual entrypoints around the research workflow, add installation/workflow/contribution guides and a scoped roadmap, and promote evaluation documentation while preserving its old link.
 - Keep the legacy repository URL, reading commands and configuration compatible; maintain research and reading modules together on main. Extend CI with a full-profile installer dry run.
 - Add `research-evaluate`: research relevant papers and official evaluation code, then define sourced metrics, curves, tables, logs and versioned fixed-sample protocols for each topic.

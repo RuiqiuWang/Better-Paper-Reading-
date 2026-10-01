@@ -18,8 +18,8 @@
 Requires **Python 3.8+** and a local Codex or Claude Code environment with file and shell access. The reading workspace and follow-up helpers use Python's standard library. `openreview-py` is optional and needed only for searches using the OpenReview helper. Internet access is needed to fetch papers and external assets such as MathJax.
 
 ```sh
-git clone https://github.com/RuiqiuWang/Better-Paper-Reading-.git
-cd Better-Paper-Reading-
+git clone https://github.com/RuiqiuWang/Better-Research.git
+cd Better-Research
 python install.py --target both
 ```
 

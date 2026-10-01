@@ -31,6 +31,6 @@ For documentation changes, check repository-relative links outside fenced exampl
 
 The test workflow runs on pushes and pull requests on Linux and Windows. It checks the Python suite, reading UI JavaScript syntax and an installation dry run. A local passing run does not establish that remote CI has completed; report its status separately when available.
 
-Default installation stays `reading` for compatibility; `research` and `all` are explicit choices. Retain legacy configuration names and `paper-reading-backups` so existing users retain their preferences and upgrade path. Source folder and remote repository names need not change with the product title.
+Default installation stays `reading` for compatibility; `research` and `all` are explicit choices. Retain legacy configuration names and `paper-reading-backups` so existing users retain their preferences and upgrade path. The GitHub repository is `RuiqiuWang/Better-Research`; existing local checkout folders need not be renamed.
 
 New behavior must have an observable check where appropriate. Do not describe a planned skill or a proposal as installed functionality. Local commits are welcome; remote pushes require the user's explicit request.

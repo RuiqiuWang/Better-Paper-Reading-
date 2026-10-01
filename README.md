@@ -26,7 +26,7 @@ Requires **Python 3.8+**, an agent host with local file/shell access, and **Git*
 Run in a terminal:
 
 ```sh
-git clone https://github.com/RuiqiuWang/Better-Paper-Reading-.git Better-Research
+git clone https://github.com/RuiqiuWang/Better-Research.git Better-Research
 cd Better-Research
 python install.py --target codex --profile all
 ```
@@ -78,6 +78,6 @@ Small code and documentation changes are committed locally. **Remote pushes requ
 
 `main` is the shared integration branch. Continue development in this repository, normally on focused `codex/<topic>` branches.
 
-The GitHub URL retains the legacy repository name so existing clones and links remain valid. The project name is **Better Research**; legacy reading configuration and backup names are retained for upgrades.
+The repository is now **RuiqiuWang/Better-Research**. Existing clones can update their remote using the [upgrade guide](docs/installation.md). Legacy reading configuration and backup names are retained for upgrades.
 
 [MIT License](LICENSE).
