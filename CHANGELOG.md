@@ -2,6 +2,8 @@
 
 ## 2026-10-01
 
+- Consolidate Better Research as the maintained project: rewrite bilingual entrypoints around the research workflow, add installation/workflow/contribution guides and a scoped roadmap, and promote evaluation documentation while preserving its old link.
+- Keep the legacy repository URL, reading commands and configuration compatible; maintain research and reading modules together on main. Extend CI with a full-profile installer dry run.
 - Add `research-evaluate`: research relevant papers and official evaluation code, then define sourced metrics, curves, tables, logs and versioned fixed-sample protocols for each topic.
 - Include stereo-video and depth-estimation guidance, raw result retention, timing/resource records and checkpoint/continuation rules. This release adds agent instructions and templates, not a running training logger.
 - Include both research skills in the research/all install profiles; preserve reading defaults and document the adopted evaluation workflow.

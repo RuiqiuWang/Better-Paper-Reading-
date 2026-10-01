@@ -15,7 +15,7 @@ $research-manage 根据这次实验的指标文件更新具体结果、失败记
 $research-evaluate 为新topic核验相关论文，制定有来源的评测和实验保存方案。
 ```
 
-Claude Code 使用 `/research-manage`、`/research-evaluate`。评测工作流见[评测指南](experiment-logging-proposal.md)。
+Claude Code 使用 `/research-manage`、`/research-evaluate`。评测工作流见[评测指南](evaluation.md)。
 
 - 代码 `/home/<account>/code/<topic>`；环境 `/data/<account>/envs`。
 - 课题 README 指路，方法卡解释代码/环境/资产，CHANGELOG 记录原因。
